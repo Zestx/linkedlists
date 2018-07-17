@@ -22,13 +22,13 @@ void rm_l(List *list, Node *to_rm);
 void display_ll(List *list);
 void rm_wl(List *list);
 
-//MAIN..
+//MAIN.. (ll functions tests)
 int main(void)
 {
 	printf("\n");
-	//init the list
+	//init the list.
 	List *linked = init();
-	//fill the list
+	//fill the list.
 	linked->first->n = 7;
 	add_h(linked, 5);
 	add_h(linked, 10);
@@ -38,7 +38,7 @@ int main(void)
 	printf("INITIAL list: \n");
 	display_ll(linked);
 
-	//add an element (24) inside the list (before '12')
+	//add an element (24) inside the list (before '12').
 	Node *buff = linked->first;
 	while(buff != NULL)
 	{
@@ -66,6 +66,12 @@ int main(void)
 	}
 	//display the list
 	printf("REVOVED 10: \n");
+	display_ll(linked);
+
+	//Empty the list.
+	rm_wl(linked);
+	//display the (hopefuly) empty list.
+	printf("EMPTIED THE LIST: \n");
 	display_ll(linked);
 	
 	printf("\n");
@@ -183,6 +189,18 @@ void rm_l(List *list, Node *to_rm)
 void rm_wl(List *list)
 {
 
+	if(list == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+
+	Node *buff = malloc(sizeof(Node));
+	while(list->first != NULL)
+	{
+		buff = list->first;
+		list->first = list->first->next;
+		free(buff);
+	}
 }
 
 //Display a whole linked list.
