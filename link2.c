@@ -11,6 +11,7 @@ typedef struct node
 typedef struct list
 {
 	Node *first;
+	int node_count;
 }List;
 
 //Prototypes
@@ -21,6 +22,7 @@ void rm_h(List *list);
 void rm_l(List *list, Node *to_rm);
 void display_ll(List *list);
 void rm_wl(List *list);
+int countnodes_ll(List *list);
 
 //MAIN.. (ll functions tests)
 int main(void)
@@ -68,11 +70,19 @@ int main(void)
 	printf("REVOVED 10: \n");
 	display_ll(linked);
 
+	//count the nodes in the list.
+	int nnodes = countnodes_ll(linked);
+	//display the result
+	printf("NUMBER of elements in the list: %d\n", nnodes);
+	//or..
+	printf("NUMBER of elements in the list: %d\n", linked->node_count);
+	
 	//Empty the list.
 	rm_wl(linked);
 	//display the (hopefuly) empty list.
 	printf("EMPTIED THE LIST: \n");
 	display_ll(linked);
+
 	
 	printf("\n");
 		
@@ -93,7 +103,7 @@ List *init(void)
 	elem->n      = 0;
 	elem->next   = NULL;
 	nlist->first = elem;
-
+	nlist->node_count = 1;
 	return nlist;
 }
 
@@ -110,6 +120,7 @@ void add_h(List *list, int nvalue)
 	n_elem->n    = nvalue;
 	n_elem->next = list->first;
 	list->first  = n_elem;
+	list->node_count = list->node_count + 1;
 	
 }
 
@@ -126,6 +137,7 @@ void add_l(List *list, Node *b_elem, int nvalue)
 	n_elem->n = nvalue;
 	n_elem->next = b_elem->next;
 	b_elem->next = n_elem;
+	list->node_count = list->node_count + 1;
 
 }
 
@@ -143,6 +155,7 @@ void rm_h(List *list)
 		list->first = list->first->next;
 		free(rmbuff);
 	}
+	list->node_count = list->node_count + 1;
 
 }
 
@@ -182,7 +195,7 @@ void rm_l(List *list, Node *to_rm)
 			}while(endloop != 1);
 		
 		}
-
+		list->node_count = list->node_count - 1;
 }
 
 //Delete (free) the whole list.
@@ -201,6 +214,7 @@ void rm_wl(List *list)
 		list->first = list->first->next;
 		free(buff);
 	}
+	list->node_count = 0;
 }
 
 //Display a whole linked list.
@@ -221,9 +235,27 @@ void display_ll(List *list)
 	printf("END.\n");
 }
 
+//Count the number of elements in a linked list.
+int countnodes_ll(List *list)
+{
+	if(list == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
 
+	Node *cbuff = list->first;
+	int ncount = 0;
+	do
+	{
+		if(cbuff != NULL)
+		{
+			ncount++;
+		}
+		cbuff = cbuff->next;
+	}while(cbuff != NULL);
 
-
+	return ncount;
+}
 
 
 
