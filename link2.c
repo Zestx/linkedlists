@@ -8,6 +8,7 @@ typedef struct node
 	int n;
 	struct node *next;
 }Node;
+//Here I use a struct to contain eventual informations about the list(nbr of nodes,..);
 typedef struct list
 {
 	Node *first;
@@ -15,13 +16,13 @@ typedef struct list
 }List;
 
 //Prototypes
-List *init(void);
-void add_h(List *list, int nvalue);
-void add_l(List *list, Node *b_elem, int nvalue);
-void rm_h(List *list);
-void rm_l(List *list, Node *to_rm);
+List *init_ll(void);
+void add_head_ll(List *list, int nvalue);
+void add_node_ll(List *list, Node *b_elem, int nvalue);
+void remove_head_ll(List *list);
+void remove_node_ll(List *list, Node *to_rm);
 void display_ll(List *list);
-void rm_wl(List *list);
+void remove_ll(List *list);
 int countnodes_ll(List *list);
 
 //MAIN.. (ll functions tests)
@@ -29,45 +30,45 @@ int main(void)
 {
 	printf("\n");
 	//init the list.
-	List *linked = init();
+	List *linked = init_ll();
 	//fill the list.
-	linked->first->n = 7;
-	add_h(linked, 5);
-	add_h(linked, 10);
-	add_h(linked, 12);
-	add_h(linked, 78);
+	add_head_ll(linked, 7);
+	add_head_ll(linked, 5);
+	add_head_ll(linked, 10);
+	add_head_ll(linked, 12);
+	add_head_ll(linked, 78);
 	//display inital list
 	printf("INITIAL list: \n");
 	display_ll(linked);
 
-	//add an element (24) inside the list (before '12').
+	//add an element (24) inside the list (after '12').
 	Node *buff = linked->first;
-	while(buff != NULL)
+	while(buff)
 	{
 		if(buff->n == 12)
 		{
-			add_l(linked, buff, 24);
+			add_node_ll(linked, buff, 24);
 		}
 
 		buff = buff->next;
 	}
 	//display the list
-	printf("ADDED 24 before 12: \n");
+	printf("ADDED 24 after 12: \n");
 	display_ll(linked);
 	
 	//remove the node that contain '10' in the list.
 	buff = linked->first;
-	while(buff != NULL)
+	while(buff)
 	{
 		if(buff->n == 10)
 		{	
-			rm_l(linked, buff);	
+			remove_node_ll(linked, buff);	
 		}
 		
 		buff = buff->next;
 	}
 	//display the list
-	printf("REVOVED 10: \n");
+	printf("REMOVED 10: \n");
 	display_ll(linked);
 
 	//count the nodes in the list.
@@ -78,7 +79,7 @@ int main(void)
 	printf("NUMBER of elements in the list: %d\n", linked->node_count);
 	
 	//Empty the list.
-	rm_wl(linked);
+	remove_ll(linked);
 	//display the (hopefuly) empty list.
 	printf("EMPTIED THE LIST: \n");
 	display_ll(linked);
@@ -90,146 +91,144 @@ int main(void)
 }
 
 //Initialize a linked list.
-List *init(void)
+List *init_ll(void)
 {
 	List *nlist = malloc(sizeof(List));
-	Node *elem = malloc(sizeof(Node));
 
-	if(nlist == NULL || elem == NULL)
+	if(!nlist)
 	{
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);//wrapper?
 	}
-
-	elem->n      = 0;
-	elem->next   = NULL;
-	nlist->first = elem;
-	nlist->node_count = 1;
+	
+	nlist->first = NULL;
+	nlist->node_count = 0;
 	return nlist;
 }
 
 //Add a node(n_elem) to the head of a linked list.
-void add_h(List *list, int nvalue)
+void add_head_ll(List *list, int nvalue)
 {
-	Node *n_elem = malloc(sizeof(Node));
+	Node *new_node = malloc(sizeof(Node));
 	
-	if(list == NULL || n_elem == NULL)
+	if(!new_node)
 	{
 		exit(EXIT_FAILURE);
-	}
+	}//check for 'list' at initialization is 'safe' enough?
 
-	n_elem->n    = nvalue;
-	n_elem->next = list->first;
-	list->first  = n_elem;
-	list->node_count = list->node_count + 1;
+	new_node->n    = nvalue;
+	new_node->next = list->first;
+	list->first  = new_node;
+	list->node_count++;
 	
 }
 
-//Add a node 'inside' the list (after a specified node);
-void add_l(List *list, Node *b_elem, int nvalue)
+//Add a node 'inside' a linked list (after a specified node);
+void add_node_ll(List *list, Node *b_node, int nvalue)//b_ stands for "before"
 {
-	Node *n_elem = malloc(sizeof(Node));
+	Node *new_node = malloc(sizeof(Node));
 
-	if(list == NULL || n_elem == NULL)
+	if(!new_node)
 	{
 		exit(EXIT_FAILURE);
 	}
 	
-	n_elem->n = nvalue;
-	n_elem->next = b_elem->next;
-	b_elem->next = n_elem;
-	list->node_count = list->node_count + 1;
+	new_node->n = nvalue;
+	new_node->next = b_node->next;
+	b_node->next = new_node;
+	list->node_count++;
 
 }
 
 //Remove the node at the head of a linked list.
-void rm_h(List *list)
+void remove_head_ll(List *list)
 {
-	if(list == NULL)
+	if(!list)//not necessary?
 	{
 		exit(EXIT_FAILURE);
 	}
 
-	if(list->first != NULL)
+	if(list->first)
 	{
-		Node *rmbuff = list->first;
+		Node *node_rm = list->first;//node_rm stands for 'node to remove'
 		list->first = list->first->next;
-		free(rmbuff);
+		free(node_rm);
 	}
-	list->node_count = list->node_count + 1;
+	list->node_count--;
 
 }
 
 //Remove a node inside the list.
-void rm_l(List *list, Node *to_rm)
+void remove_node_ll(List *list, Node *node)
 {
 
-	if(list == NULL || to_rm == NULL)
+	if(!node)
 	{
 		exit(EXIT_FAILURE);
 	}
 
-		if(to_rm == list->first)
+		if(node == list->first)
 		{
-			Node *rmbuff = list->first;
+			Node *node_rm = list->first;
 			list->first = list->first->next;
-		       	free(rmbuff);	
+		       	free(node_rm);	
 		}
 		
 		else
 		{
 			Node *b_rm = list->first;
-			Node *rmbuff = list->first->next;
+			Node *node_rm = list->first->next;
 			int endloop = 0;
 
 			do
 			{	
-				if(to_rm == rmbuff)
+				if(node == node_rm)
 				{
-					b_rm->next = rmbuff->next;
-					free(rmbuff);
+					b_rm->next = node_rm->next;
+					free(node_rm);
 					endloop = 1;
 				}
 				
-				b_rm = rmbuff;
-				rmbuff = rmbuff->next;
+				b_rm = node_rm;
+				node_rm = node_rm->next;
 			}while(endloop != 1);
 		
 		}
-		list->node_count = list->node_count - 1;
+		list->node_count--;
 }
 
 //Delete (free) the whole list.
-void rm_wl(List *list)
+void remove_ll(List *list)
 {
 
-	if(list == NULL)
+	if(!list)//unnecessary?
 	{
 		exit(EXIT_FAILURE);
 	}
 
 	Node *buff = malloc(sizeof(Node));
-	while(list->first != NULL)
+	while(list->first)
 	{
 		buff = list->first;
 		list->first = list->first->next;
 		free(buff);
 	}
 	list->node_count = 0;
+	list->first = NULL;
 }
 
 //Display a whole linked list.
 void display_ll(List *list)
 {
-	if(list == NULL)
+	Node *curr_node = list->first;
+	if(!list)//unnecesary?
 	{
 		exit(EXIT_FAILURE);
 	}
 
-	Node *buff = list->first;
-	while(buff != NULL)
+	while(curr_node)
 	{
-		printf("%d -> ", buff->n);
-		buff = buff->next;
+		printf("%d -> ", curr_node->n);
+		curr_node = curr_node->next;
 	}
 	
 	printf("END.\n");
@@ -238,23 +237,23 @@ void display_ll(List *list)
 //Count the number of elements in a linked list.
 int countnodes_ll(List *list)
 {
-	if(list == NULL)
+	if(!list)
 	{
 		exit(EXIT_FAILURE);
 	}
 
-	Node *cbuff = list->first;
-	int ncount = 0;
-	do
+	Node *curr_node = list->first;
+	int count = 0;
+	while(curr_node)
 	{
-		if(cbuff != NULL)
+		if(curr_node)
 		{
-			ncount++;
+			count++;
 		}
-		cbuff = cbuff->next;
-	}while(cbuff != NULL);
+		curr_node = curr_node->next;
+	}
 
-	return ncount;
+	return count;
 }
 
 
