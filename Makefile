@@ -1,5 +1,10 @@
 CC = gcc
-CFLAGS = -I.
+CFLAGS = -I. -O1
 linked2: link2.o
-	$(CC) $(CFLAGS) $^ -o $@ -Wall -Wextra
-	
+	$(CC) $(CFLAGS) -static $^ -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) $^ -c -o $@
+
+%.s: %.c
+	$(CC) $(CFLAGS) $^ -S -o $@

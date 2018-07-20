@@ -8,7 +8,6 @@ typedef struct node
 	int n;
 	struct node *next;
 }Node;
-//Here I use a struct to contain eventual informations about the list(nbr of nodes,..);
 typedef struct list
 {
 	Node *first;
@@ -43,10 +42,8 @@ int main(void)
 
 	//add an element (24) inside the list (after '12').
 	Node *buff = linked->first;
-	while(buff)
-	{
-		if(buff->n == 12)
-		{
+	while (buff){
+		if (buff->n == 12) {
 			add_node_ll(linked, buff, 24);
 		}
 
@@ -58,10 +55,8 @@ int main(void)
 	
 	//remove the node that contain '10' in the list.
 	buff = linked->first;
-	while(buff)
-	{
-		if(buff->n == 10)
-		{	
+	while (buff){
+		if (buff->n == 10) {	
 			remove_node_ll(linked, buff);	
 		}
 		
@@ -95,8 +90,7 @@ List *init_ll(void)
 {
 	List *nlist = malloc(sizeof(List));
 
-	if(!nlist)
-	{
+	if (!nlist) {
 		exit(EXIT_FAILURE);//wrapper?
 	}
 	
@@ -110,10 +104,9 @@ void add_head_ll(List *list, int nvalue)
 {
 	Node *new_node = malloc(sizeof(Node));
 	
-	if(!new_node)
-	{
+	if (!new_node) {
 		exit(EXIT_FAILURE);
-	}//check for 'list' at initialization is 'safe' enough?
+	}
 
 	new_node->n    = nvalue;
 	new_node->next = list->first;
@@ -127,8 +120,7 @@ void add_node_ll(List *list, Node *b_node, int nvalue)//b_ stands for "before"
 {
 	Node *new_node = malloc(sizeof(Node));
 
-	if(!new_node)
-	{
+	if (!new_node) {
 		exit(EXIT_FAILURE);
 	}
 	
@@ -142,13 +134,8 @@ void add_node_ll(List *list, Node *b_node, int nvalue)//b_ stands for "before"
 //Remove the node at the head of a linked list.
 void remove_head_ll(List *list)
 {
-	if(!list)//not necessary?
-	{
-		exit(EXIT_FAILURE);
-	}
 
-	if(list->first)
-	{
+	if (list->first) {
 		Node *node_rm = list->first;//node_rm stands for 'node to remove'
 		list->first = list->first->next;
 		free(node_rm);
@@ -161,36 +148,28 @@ void remove_head_ll(List *list)
 void remove_node_ll(List *list, Node *node)
 {
 
-	if(!node)
-	{
+	if(!node){
 		exit(EXIT_FAILURE);
 	}
 
-		if(node == list->first)
-		{
+		if (node == list->first) {
 			Node *node_rm = list->first;
 			list->first = list->first->next;
 		       	free(node_rm);	
-		}
-		
-		else
-		{
+		} else {
 			Node *b_rm = list->first;
 			Node *node_rm = list->first->next;
 			int endloop = 0;
 
-			do
-			{	
-				if(node == node_rm)
-				{
+			while (node_rm) {	
+				if (node == node_rm) {
 					b_rm->next = node_rm->next;
 					free(node_rm);
-					endloop = 1;
 				}
 				
 				b_rm = node_rm;
 				node_rm = node_rm->next;
-			}while(endloop != 1);
+			}
 		
 		}
 		list->node_count--;
@@ -200,14 +179,8 @@ void remove_node_ll(List *list, Node *node)
 void remove_ll(List *list)
 {
 
-	if(!list)//unnecessary?
-	{
-		exit(EXIT_FAILURE);
-	}
-
 	Node *buff = malloc(sizeof(Node));
-	while(list->first)
-	{
+	while (list->first) {
 		buff = list->first;
 		list->first = list->first->next;
 		free(buff);
@@ -220,13 +193,8 @@ void remove_ll(List *list)
 void display_ll(List *list)
 {
 	Node *curr_node = list->first;
-	if(!list)//unnecesary?
-	{
-		exit(EXIT_FAILURE);
-	}
 
-	while(curr_node)
-	{
+	while (curr_node) {
 		printf("%d -> ", curr_node->n);
 		curr_node = curr_node->next;
 	}
@@ -237,19 +205,11 @@ void display_ll(List *list)
 //Count the number of elements in a linked list.
 int countnodes_ll(List *list)
 {
-	if(!list)
-	{
-		exit(EXIT_FAILURE);
-	}
 
 	Node *curr_node = list->first;
 	int count = 0;
-	while(curr_node)
-	{
-		if(curr_node)
-		{
-			count++;
-		}
+	while (curr_node) {
+		count++;
 		curr_node = curr_node->next;
 	}
 
